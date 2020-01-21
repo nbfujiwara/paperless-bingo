@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": [
+      "esnext",
+      "esnext.asynciterable",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "skipLibCheck": true, //node_modulesのd.tsとかでエラったりするのはいやだ
+    "strictPropertyInitialization": false,
+    "paths": {
+      "~/*": ["./*"]
+    },
+    "types": [
+      "@types/node",
+      "@nuxt/types",
+      "vuetify"
+    ]
+  },
+  "files": [
+    "shims-vue.d.ts"
+  ],
+  "include": [
+    "components/**/*.vue",
+    "layouts/**/*.vue",
+    "pages/**/*.vue",
+    "interfaces/**/*.ts",
+    "libs/**/*.ts",
+    "store/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
