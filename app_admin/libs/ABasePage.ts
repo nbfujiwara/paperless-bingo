@@ -28,8 +28,4 @@ export default class ABasePage extends Vue {
       return Promise.resolve(true)
     }
   }
-
-  protected dateFormat(dt: Date, format: string) {
-    return UtilDate.format(dt, format)
-  }
 }

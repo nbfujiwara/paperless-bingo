@@ -4,6 +4,7 @@
     <div class="main">
       <v-btn @click="resetGame" class="primary">ゲームリセット</v-btn>
       <v-btn @click="closeGameEntry" class="primary">エントリー締め切り</v-btn>
+      <v-btn class="primary" to="/roulette">【投影用】抽選画面</v-btn>
       <v-btn class="primary" to="/manual-add">手動追加</v-btn>
     </div>
   </div>

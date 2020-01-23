@@ -164,6 +164,12 @@ export default class FirebaseManager {
       .doc(gameId)
       .set(game)
   }
+  public savePushGameHit(gameId: string, num: number) {
+    return this.db
+      .collection('games')
+      .doc(gameId)
+      .update({ hits: firebase.firestore.FieldValue.arrayUnion(num) })
+  }
 
   /*
 

@@ -1,3 +1,4 @@
+import { IBingoCell } from '~/../common/interfaces/IBingoCell'
 import { IGame } from '~/../common/interfaces/IGame'
 import { IUser } from '~/../common/interfaces/IUser'
 
@@ -17,5 +18,6 @@ export interface IGeneralState {
 export interface IBasicState {
   user: IUser
   sheet: number[]
+  sheetCells: IBingoCell[][]
   game: IGame
 }

@@ -6,8 +6,12 @@ import UtilDate from '~/../common/libs/UtilDate'
 
 export default class ABasePage extends Vue {
   protected commonBeforeMount() {
-    if (!generalStateModule.isRegistered) {
-      this.$router.push({ path: '/' })
+    if (!generalStateModule.isAuthorized) {
+      return this.$router.push({ path: '/login' })
+    } else if (!generalStateModule.isRegistered) {
+      return this.$router.push({ path: '/' })
+    } else {
+      return Promise.resolve(true)
     }
   }
 }
