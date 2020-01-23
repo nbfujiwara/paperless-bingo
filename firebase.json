@@ -1,0 +1,24 @@
+{
+  "firestore": {
+    "rules": "firebase/firestore.rules",
+    "indexes": "firebase/firestore.indexes.json"
+  },
+  "hosting": [
+    {
+      "target": "player",
+      "public": "app_player/dist",
+      "ignore": [
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "admin",
+      "public": "app_admin/dist",
+      "ignore": [
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ]
+}

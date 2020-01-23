@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if get(/databases/$(database)/documents/adminUserRoles/$(request.auth.uid)).data.role > 0;
+    }
+    match /adminUsers/{userID} {
+      allow read, write: if request.auth.uid == userID;
+    }
+    match /entries/{userID} {
+      allow read, write: if request.auth.uid == userID;
+    }
+    match /games/{gameID} {
+      allow read: if request.auth.uid;
+    }
+  }
+}

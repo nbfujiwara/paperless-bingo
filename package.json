@@ -1,0 +1,12 @@
+{
+  "name": "paperless-bingo",
+  "version": "1.0.0",
+  "repository": "https://github.com/nbfujiwara/paperless-bingo.git",
+  "author": "yuji.fujiwara <yuji.fujiwara@nijibox.co.jp>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": ["app_admin","app_player"],
+  "scripts": {
+    "deploy": "cd app_admin && yarn generate && cd ../app_player && yarn generate && cd ../ && firebase deploy"
+  }
+}

@@ -1,0 +1,17 @@
+{
+ "projects": {
+    "default": "paperless-bingo"
+ },
+ "targets": {
+   "paperless-bingo": {
+     "hosting": {
+       "admin": [
+         "paperless-bingo-admin"
+       ],
+       "player": [
+         "paperless-bingo"
+       ]
+     }
+   }
+ }
+}
