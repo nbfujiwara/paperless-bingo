@@ -1,21 +1,25 @@
-# Quick Start
+# 準備
 
 ```common/.env.local.sample```　をコピーし、Firebase情報を記入して　```common/.env.local```　として保存
 ```
 $ yarn install
 ```
+
+# プレイヤー側開発
 ```
 $ cd app_player
 $ yarn dev
 ```
 http://localhost:3000
-にアクセス(プレイヤー側)
+にアクセス
+
+# 管理側開発
 ```
 $ cd app_admin
 $ yarn dev
 ```
 http://localhost:3001
-にアクセス（管理側）
+にアクセス
 
 # 管理ユーザ追加
 1. http://localhost:3001 で管理側にアクセスし、OAuth認証する
