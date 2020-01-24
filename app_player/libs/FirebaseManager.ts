@@ -39,6 +39,25 @@ export default class FirebaseManager {
     }
     this.db = firebase.firestore()
   }
+  public sendMailForAuth(email: string) {
+    const actionCodeSettings = {
+      url: String(process.env.ENV_BASE_URL),
+      handleCodeInApp: true
+    }
+    return firebase
+      .auth()
+      .sendSignInLinkToEmail(email, actionCodeSettings)
+      .then(function() {
+        window.localStorage.setItem('emailForSignIn', email)
+      })
+  }
+  private isEnableSignInWithEmailLink() {
+    return (
+      firebase.auth().isSignInWithEmailLink(window.location.href) &&
+      window.localStorage.getItem('emailForSignIn')
+    )
+  }
+  public signInWithEmailLink() {}
 
   /**
    * 認証成功失敗に関わらず既に試みたかどうか
@@ -56,6 +75,33 @@ export default class FirebaseManager {
         resolve(this.authResultCache)
       })
     } else {
+      return Promise.resolve()
+        .then(() => {
+          if (this.isEnableSignInWithEmailLink()) {
+            const email = String(window.localStorage.getItem('emailForSignIn'))
+            return firebase
+              .auth()
+              .signInWithEmailLink(email, window.location.href)
+          } else {
+            return firebase
+              .auth()
+              .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+              .then(() => {
+                return firebase.auth().getRedirectResult()
+              })
+          }
+        })
+        .then((result: firebase.auth.UserCredential) => {
+          this.authorized = true
+          if (result.user) {
+            this.authResultCache = result
+            return result
+          } else {
+            this.authResultCache = null
+            return null
+          }
+        })
+/*
       return firebase
         .auth()
         .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -74,6 +120,8 @@ export default class FirebaseManager {
               }
             })
         })
+
+ */
     }
   }
   public loginRedirect() {
