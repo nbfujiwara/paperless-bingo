@@ -7,8 +7,6 @@ import { IEntry } from '../../common/interfaces/IEntry'
 import UtilDate from '~/../common/libs/UtilDate'
 import { IUser } from '~/../common/interfaces/IUser'
 import { IGame } from '~/../common/interfaces/IGame'
-import functions from '~/node_modules/firebase'
-import CollectionReference = firebase.firestore.CollectionReference
 
 export default class FirebaseManager {
   private db: firebase.firestore.Firestore
@@ -32,7 +30,6 @@ export default class FirebaseManager {
       storageBucket,
       messagingSenderId
     }
-    console.log(config)
 
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -51,10 +48,13 @@ export default class FirebaseManager {
         window.localStorage.setItem('emailForSignIn', email)
       })
   }
+  private getLocalEmailForSignIn(): string {
+    return String(window.localStorage.getItem('emailForSignIn'))
+  }
   private isEnableSignInWithEmailLink() {
     return (
       firebase.auth().isSignInWithEmailLink(window.location.href) &&
-      window.localStorage.getItem('emailForSignIn')
+      this.getLocalEmailForSignIn()
     )
   }
   public signInWithEmailLink() {}
@@ -78,11 +78,13 @@ export default class FirebaseManager {
       return Promise.resolve()
         .then(() => {
           if (this.isEnableSignInWithEmailLink()) {
-            const email = String(window.localStorage.getItem('emailForSignIn'))
+            console.log('authorize by email')
+            const email = this.getLocalEmailForSignIn()
             return firebase
               .auth()
               .signInWithEmailLink(email, window.location.href)
           } else {
+            console.log('authorize by oauth')
             return firebase
               .auth()
               .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -92,6 +94,7 @@ export default class FirebaseManager {
           }
         })
         .then((result: firebase.auth.UserCredential) => {
+          console.log('receive authorize result', result)
           this.authorized = true
           if (result.user) {
             this.authResultCache = result
@@ -101,27 +104,6 @@ export default class FirebaseManager {
             return null
           }
         })
-/*
-      return firebase
-        .auth()
-        .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(() => {
-          return firebase
-            .auth()
-            .getRedirectResult()
-            .then((result: firebase.auth.UserCredential) => {
-              this.authorized = true
-              if (result.user) {
-                this.authResultCache = result
-                return result
-              } else {
-                this.authResultCache = null
-                return null
-              }
-            })
-        })
-
- */
     }
   }
   public loginRedirect() {
@@ -150,7 +132,7 @@ export default class FirebaseManager {
     }
     const userId = authUser.uid
     let entry: IEntry = {
-      user: { name: '', mail: '', department: '' },
+      user: { name: '', mail: '', departmentId: 0 },
       sheet: []
     }
     return this.db
@@ -161,17 +143,20 @@ export default class FirebaseManager {
         if (doc.exists) {
           entry = this.commonParseDoc(doc.data())
         } else {
+          console.log(authUser)
           if (authUser.email != null) {
             entry.user.mail = authUser.email
+          } else if (this.getLocalEmailForSignIn()) {
+            entry.user.mail = this.getLocalEmailForSignIn()
           }
-          if (this.authResultCache && this.authResultCache.additionalUserInfo) {
+          if (
+            this.authResultCache &&
+            this.authResultCache.additionalUserInfo &&
+            this.authResultCache.additionalUserInfo.profile
+          ) {
             // @ts-ignore
             entry.user.name = this.authResultCache.additionalUserInfo.profile.name
           }
-          return this.db
-            .collection('entries')
-            .doc(userId)
-            .set(entry)
         }
       })
       .then(() => {

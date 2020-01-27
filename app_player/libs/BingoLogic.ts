@@ -11,6 +11,7 @@ export default class BingoLogic {
     const sheet = BingoLogic.createRandomBingoSheet()
     const entry = { user, sheet }
     return AppUtil.FBMng.saveEntry(entry).then(() => {
+      generalStateModule.setIsRegistered(true)
       basicStateModule.setSheet(sheet)
       generalStateModule.setToastMessage('参加しました')
     })

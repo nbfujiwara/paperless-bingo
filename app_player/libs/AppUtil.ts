@@ -17,14 +17,18 @@ export default class AppUtil {
   public static handlingAuth() {
     generalStateModule.setIsAuthorized(true)
     return AppUtil.FBMng.authorize().then((authResult) => {
+      console.log(authResult)
       if (authResult) {
         generalStateModule.setIsAuthorizedSuccess(true)
         return AppUtil.FBMng.getLogonData().then((entryData) => {
+          console.log('logonData is ', entryData)
           if (entryData) {
             if (entryData.user) {
+              console.log('logonData has user data ', entryData.user)
               basicStateModule.setUser(entryData.user)
             }
             if (entryData.sheet.length > 0) {
+              console.log('logonData has sheet data ', entryData.sheet)
               basicStateModule.setSheet(entryData.sheet)
               generalStateModule.setIsRegistered(true)
             } else {

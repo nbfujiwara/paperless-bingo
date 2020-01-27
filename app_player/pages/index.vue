@@ -5,7 +5,7 @@
         ペーパーレスBingo
       </h1>
       <h2 class="subtitle">
-        Please wait...
+        Please wait....
       </h2>
       <v-progress-linear
         color="primary"
@@ -27,15 +27,26 @@ import { generalStateModule } from '~/store/modules/general'
 })
 export default class IndexPage extends Vue {
   mounted() {
-    AppUtil.handlingAuth().then(() => {
-      if (generalStateModule.isRegistered) {
-        this.$router.push({ path: '/main' })
-      } else if (generalStateModule.isAuthorizedSuccess) {
-        this.$router.push({ path: '/signup' })
-      } else {
+    AppUtil.handlingAuth()
+      .then(() => {
+        if (generalStateModule.isRegistered) {
+          console.log('goto main')
+          this.$router.push({ path: '/main' })
+        } else if (generalStateModule.isAuthorizedSuccess) {
+          console.log('signup')
+          this.$router.push({ path: '/signup' })
+        } else {
+          console.log('goto login')
+          this.$router.push({ path: '/login' })
+        }
+      })
+      .catch((e) => {
+        console.log('error発生', e)
+        generalStateModule.setToastMessage(
+          '認証中にエラーが発生しました。もう一度お試しください'
+        )
         this.$router.push({ path: '/login' })
-      }
-    })
+      })
   }
 }
 </script>

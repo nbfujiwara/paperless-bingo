@@ -1,5 +1,6 @@
 export interface IUser {
   mail: string
   name: string
-  department: string
+  departmentId: number
+  departmentEtcText?: string
 }

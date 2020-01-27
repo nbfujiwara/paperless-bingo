@@ -13,7 +13,7 @@ import { IBingoCell } from '~/../common/interfaces/IBingoCell'
 
 @Module({ dynamic: true, store, name: 'basic', namespaced: true })
 class Basic extends VuexModule implements IBasicState {
-  user: IUser = { name: '', mail: '', department: '' }
+  user: IUser = { name: '', mail: '', departmentId: 0 }
   sheet: number[] = []
   sheetCells: IBingoCell[][] = []
   game: IGame = { hits: [], started: false }

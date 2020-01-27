@@ -9,12 +9,14 @@
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
+    "generate:prod": "cross-env ENV=\"production\" nuxt-ts generate",
     "lint": "eslint --ext .ts,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^0.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
     "core-js": "2.6.9",
+    "cross-env": "^6.0.3",
     "firebase": "^7.6.2",
     "nuxt": "^2.0.0",
     "nuxt-property-decorator": "^2.5.0",

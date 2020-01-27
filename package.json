@@ -7,6 +7,6 @@
   "private": true,
   "workspaces": ["app_admin","app_player"],
   "scripts": {
-    "deploy": "cd app_admin && yarn generate && cd ../app_player && yarn generate && cd ../ && firebase deploy"
+    "deploy": "cd app_admin && yarn generate:prod && cd ../app_player && yarn generate:prod && cd ../ && firebase deploy"
   }
 }

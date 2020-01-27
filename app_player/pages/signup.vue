@@ -11,13 +11,29 @@
         ></v-text-field>
         <v-text-field
           v-model="name"
+          :error-messages="errorMessageName"
           label="氏名"
           placeholder="本名でお願いします"
         ></v-text-field>
-        <v-text-field
-          v-model="department"
+
+        <v-radio-group
+          v-model="departmentId"
+          @change="onChangeDepartment"
+          :error-messages="errorMessageDepartment"
           label="所属"
-          placeholder="事業部・室でかまいません"
+        >
+          <v-radio
+            v-for="(dep, idx) in departmentList"
+            :label="dep.name"
+            :value="dep.id"
+            :key="idx"
+          ></v-radio>
+        </v-radio-group>
+        <v-text-field
+          v-model="departmentEtcText"
+          v-show="showEtcTextInput"
+          :error-messages="errorMessageDepartmentEtc"
+          placeholder="会社名など。分かればなんでもいいです"
         ></v-text-field>
       </v-card-text>
 
@@ -30,31 +46,82 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { IUser } from '../../common/interfaces/IUser'
 import { generalStateModule } from '~/store/modules/general'
 import { basicStateModule } from '~/store/modules/basic'
 import AppUtil from '~/libs/AppUtil'
 import BingoLogic from '~/libs/BingoLogic'
+import MasterDao from '~/../common/libs/MasterDao'
 
 @Component({})
 export default class SignupPage extends Vue {
   name = basicStateModule.user.name
   mail = basicStateModule.user.mail
-  department = basicStateModule.user.department
+
+  departmentEtcText: string
+  departmentList = MasterDao.departmentList()
+  departmentId: number = 0
+  showEtcTextInput: boolean = false
+
+  errorMessageName: string = ''
+  errorMessageDepartment: string = ''
+  errorMessageDepartmentEtc: string = ''
 
   mounted() {
     if (!generalStateModule.isAuthorized) {
       this.$router.push({ path: '/' })
     }
   }
+
+  onChangeDepartment() {
+    const dep = MasterDao.department(this.departmentId)
+    if (dep && dep.withText) {
+      this.showEtcTextInput = true
+    } else {
+      this.showEtcTextInput = false
+    }
+  }
+
+  validateRegister() {
+    this.errorMessageName = ''
+    this.errorMessageDepartment = ''
+    this.errorMessageDepartmentEtc = ''
+    let warning = false
+    if (!this.name) {
+      this.errorMessageName = '入力してください'
+      warning = true
+    }
+    if (!this.departmentId) {
+      this.errorMessageDepartment = '選択してください'
+      warning = true
+    }
+    const dep = MasterDao.department(this.departmentId)
+    if (dep && dep.withText) {
+      if (!this.departmentEtcText) {
+        this.errorMessageDepartmentEtc = '入力してください'
+        warning = true
+      }
+    }
+
+    return warning
+  }
   executeRegister() {
-    const user = {
+    const user: IUser = {
       name: this.name,
       mail: this.mail,
-      department: this.department
+      departmentId: this.departmentId
     }
-    BingoLogic.entry(user).then(() => {
-      this.$router.push({ path: '/main' })
-    })
+    const dep = MasterDao.department(this.departmentId)
+    if (dep && dep.withText) {
+      user.departmentEtcText = this.departmentEtcText
+    }
+
+    const warning = this.validateRegister()
+    if (!warning) {
+      BingoLogic.entry(user).then(() => {
+        this.$router.push({ path: '/main' })
+      })
+    }
   }
 }
 </script>
