@@ -20,7 +20,6 @@ import AppUtil from '~/libs/AppUtil'
 import UtilDate from '~/../common/libs/UtilDate'
 import ABasePage from '~/libs/ABasePage'
 import BingoLogic from '~/libs/BingoLogic'
-import { basicStateModule } from '~/store/modules/basic'
 import { bingoStateModule } from '~/store/modules/bingo'
 
 @Component({

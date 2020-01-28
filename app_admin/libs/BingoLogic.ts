@@ -1,4 +1,3 @@
-import { basicStateModule } from 'paperless-bingo-player/store/modules/basic'
 import { IEntry } from '../../common/interfaces/IEntry'
 import { bingoStateModule } from '~/store/modules/bingo'
 import { generalStateModule } from '~/store/modules/general'
