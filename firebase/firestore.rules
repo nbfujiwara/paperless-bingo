@@ -11,7 +11,7 @@ service cloud.firestore {
       allow read, write: if request.auth.uid == userID;
     }
     match /games/{gameID} {
-      allow read: if request.auth.uid;
+      allow read: if request.auth != null;
     }
   }
 }

@@ -198,7 +198,7 @@ export default class BingoLogic {
         ? diagonalLBRTOpenedCount
         : maxOpenedCount
 
-    if (maxOpenedCount == 4) {
+    if (maxOpenedCount === 4) {
       generalStateModule.setToastMessage('!!!!!BINGO!!!!!')
     } else if (maxOpenedCount === 3) {
       generalStateModule.setToastMessage('リーチ!')

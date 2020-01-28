@@ -5,6 +5,7 @@ import {
   getModule,
   Module
 } from 'vuex-module-decorators'
+import { IEntry } from '../../../common/interfaces/IEntry'
 import store from '~/store/store'
 import { IBingoState } from '~/store/types'
 import { IGame } from '~/../common/interfaces/IGame'
@@ -12,6 +13,7 @@ import { IGame } from '~/../common/interfaces/IGame'
 @Module({ dynamic: true, store, name: 'bingo', namespaced: true })
 class Database extends VuexModule implements IBingoState {
   game: IGame = { hits: [], started: false }
+  entries: IEntry[] = []
 
   @Mutation
   private SET_GAME(val: IGame) {
@@ -25,6 +27,10 @@ class Database extends VuexModule implements IBingoState {
   private SET_GAME_STARTED(val: boolean) {
     this.game.started = val
   }
+  @Mutation
+  private SET_ENTRIES(val: IEntry[]) {
+    this.entries = val
+  }
 
   @Action({})
   public setGame(val: IGame) {
@@ -37,6 +43,10 @@ class Database extends VuexModule implements IBingoState {
   @Action({})
   public pushHit(val: number) {
     this.PUSH_HIT(val)
+  }
+  @Action({})
+  public setEntries(val: IEntry[]) {
+    this.SET_ENTRIES(val)
   }
 }
 

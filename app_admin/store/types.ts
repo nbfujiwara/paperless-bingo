@@ -1,3 +1,4 @@
+import { IEntry } from '~/../common/interfaces/IEntry'
 import { IGame } from '~/../common/interfaces/IGame'
 import { IAdminUser } from '~/../common/interfaces/IAdminUser'
 
@@ -20,4 +21,5 @@ export interface IBasicState {
 }
 export interface IBingoState {
   game: IGame | null
+  entries: IEntry[]
 }

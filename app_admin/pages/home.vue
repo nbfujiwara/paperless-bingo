@@ -2,6 +2,7 @@
   <div class="containerWithHeader">
     <page-header title-text="HOME"></page-header>
     <div class="main">
+
       <v-btn @click="resetGame" class="primary">ゲームリセット</v-btn>
       <v-btn
         :disabled="currentGame.started"
@@ -14,6 +15,9 @@
       >
       <v-btn :disabled="!currentGame.started" class="primary" to="/manual-add"
         >手動追加</v-btn
+      >
+      <v-btn class="primary" to="/entries"
+        >エントリー一覧</v-btn
       >
 
       <v-divider class="my-5"></v-divider>
@@ -59,6 +63,9 @@ import { bingoStateModule } from '~/store/modules/bingo'
 export default class HomePage extends ABasePage {
   beforeMount() {
     this.commonBeforeMount()
+  }
+  mounted() {
+    AppUtil.loadGame()
   }
   get currentGame() {
     return bingoStateModule.game

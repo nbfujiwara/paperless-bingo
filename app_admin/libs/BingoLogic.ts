@@ -1,3 +1,4 @@
+import { IEntry } from '../../common/interfaces/IEntry'
 import { bingoStateModule } from '~/store/modules/bingo'
 import { generalStateModule } from '~/store/modules/general'
 import AppUtil from '~/libs/AppUtil'
@@ -44,5 +45,14 @@ export default class BingoLogic {
         return hitNum
       }
     )
+  }
+
+  public static loadEntries() {
+    AppUtil.FBMng.getEntries().then((list: IEntry[]) => {
+      bingoStateModule.setEntries(list)
+      generalStateModule.setToastMessage(
+        'エントリー一覧をロードしました(' + list.length + '件'
+      )
+    })
   }
 }
