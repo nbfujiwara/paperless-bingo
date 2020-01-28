@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import MasterDao from '../../common/libs/MasterDao'
 import AppUtil from '~/libs/AppUtil'
 import UtilDate from '~/../common/libs/UtilDate'
@@ -36,35 +36,40 @@ export default class EntriesPage extends ABasePage {
   mounted() {
     this.loadEntries()
   }
-  get tableHeaders(): { [s: string]: any }[] {
-    return [
-      {
-        text: '氏名',
-        value: 'name',
-        sortable: false
-      },
-      {
-        text: 'メール',
-        value: 'mail',
-        align: 'start'
-      },
-      {
-        text: '所属',
-        value: 'department'
-      },
-      {
-        text: 'シート',
-        value: 'sheet',
-        sortable: false
-      },
-        {
-            text: '状態',
-            value: 'isReach'
-        }
-    ]
+  private tableHeaders: { [s: string]: any }[] = [
+    {
+      text: '氏名',
+      value: 'name',
+      sortable: false
+    },
+    {
+      text: 'メール',
+      value: 'mail',
+      align: 'start'
+    },
+    {
+      text: '所属',
+      value: 'department'
+    },
+    {
+      text: 'シート',
+      value: 'sheet',
+      sortable: false
+    },
+    {
+      text: '状態',
+      value: 'status'
+    }
+  ]
+  private tableItems: { [s: string]: any }[] = []
+
+  get hits(): number[] {
+    return bingoStateModule.game.hits
   }
-  get tableItems(): { [s: string]: any }[] {
-    const list = []
+
+  private refreshTableItems() {
+    console.log('called refreshTableItems3')
+    this.tableItems.splice(0, this.tableItems.length)
     for (const entry of bingoStateModule.entries) {
       const department = MasterDao.department(entry.user.departmentId)
       let departmentName = ''
@@ -74,20 +79,28 @@ export default class EntriesPage extends ABasePage {
           departmentName += '(' + entry.user.departmentEtcText + ')'
         }
       }
-      list.push({
+      const sheetStatus = BingoLogic.getSheetStatus(entry.sheet, this.hits)
+      this.tableItems.push({
         name: entry.user.name,
         mail: entry.user.mail,
         department: departmentName,
         sheet: entry.sheet,
-        isReach: false,
-        isBingo: false
+        status: sheetStatus + ':' + BingoLogic.getSheetStatusName(sheetStatus)
       })
     }
-    return list
+  }
+
+  @Watch('hits')
+  onChangeHitList(newVal: number[], oldVal: number[]) {
+    this.refreshTableItems()
   }
 
   loadEntries() {
-    BingoLogic.loadEntries()
+    AppUtil.loadGame().then(() => {
+      BingoLogic.loadEntries().then(() => {
+        this.refreshTableItems()
+      })
+    })
   }
 }
 </script>
