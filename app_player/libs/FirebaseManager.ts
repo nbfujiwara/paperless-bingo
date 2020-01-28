@@ -2,17 +2,13 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
-import { IAdminLogonData } from '../../common/interfaces/IAdminLogonData'
 import { IEntry } from '../../common/interfaces/IEntry'
 import UtilDate from '~/../common/libs/UtilDate'
-import { IUser } from '~/../common/interfaces/IUser'
-import { IGame } from '~/../common/interfaces/IGame'
 
 export default class FirebaseManager {
   private db: firebase.firestore.Firestore
   private authResultCache: firebase.auth.UserCredential | null = null
   private authorized: boolean = false
-  private static firebaseInitialized: boolean = false
 
   public constructor() {
     const apiKey = process.env.ENV_FB_API_KEY
@@ -108,7 +104,7 @@ export default class FirebaseManager {
   }
   public loginRedirect() {
     const provider = new firebase.auth.GoogleAuthProvider()
-    firebase.auth().signInWithRedirect(provider)
+    return firebase.auth().signInWithRedirect(provider)
   }
   public logout() {
     firebase
