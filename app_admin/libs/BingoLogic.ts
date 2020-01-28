@@ -12,7 +12,15 @@ export default class BingoLogic {
     })
   }
   public static startGame() {
-    bingoStateModule.startGame()
+    const game = bingoStateModule.game
+    game.started = true
+    AppUtil.FBMng.saveGame(BingoLogic.GAME_ID, game)
+      .then(() => {
+        return AppUtil.loadGame()
+      })
+      .then(() => {
+        generalStateModule.setToastMessage('エントリーを締め切りました')
+      })
   }
 
   public static drawNumber(num: number) {

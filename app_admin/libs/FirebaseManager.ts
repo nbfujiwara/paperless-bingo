@@ -30,7 +30,6 @@ export default class FirebaseManager {
       storageBucket,
       messagingSenderId
     }
-    console.log(config)
 
     if (!firebase.apps.length) {
       firebase.initializeApp(config)
@@ -154,7 +153,7 @@ export default class FirebaseManager {
         if (doc.exists) {
           return this.commonParseDoc(doc.data())
         } else {
-          return {}
+          return null
         }
       })
   }

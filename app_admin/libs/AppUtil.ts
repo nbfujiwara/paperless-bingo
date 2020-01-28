@@ -39,6 +39,13 @@ export default class AppUtil {
       if (game) {
         console.log(game)
         bingoStateModule.setGame(game)
+      } else {
+        return AppUtil.FBMng.saveGame(
+          BingoLogic.GAME_ID,
+          bingoStateModule.game
+        ).then(() => {
+          generalStateModule.setToastMessage('初期化ゲーム情報を保存しました')
+        })
       }
     })
   }
