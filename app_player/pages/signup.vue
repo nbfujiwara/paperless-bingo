@@ -5,9 +5,9 @@
       <v-card-text>
         <v-text-field
           v-model="mail"
-          label="メールアドレス"
           :readonly="!editableMail"
           :disabled="!editableMail"
+          label="メールアドレス"
         ></v-text-field>
         <v-text-field
           v-model="name"
@@ -121,8 +121,10 @@ export default class SignupPage extends Vue {
 
     const warning = this.validateRegister()
     if (!warning) {
-      BingoLogic.entry(user).then(() => {
-        this.$router.push({ path: '/main' })
+      BingoLogic.entry(user).then((success: boolean) => {
+        if (success) {
+          this.$router.push({ path: '/main' })
+        }
       })
     }
   }

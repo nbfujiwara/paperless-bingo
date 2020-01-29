@@ -10,21 +10,37 @@ export default class BingoLogic {
   public static entry(user: IUser) {
     const sheet = BingoLogic.createRandomBingoSheet()
     const entry = { user, sheet }
-    return AppUtil.FBMng.saveEntry(entry).then(() => {
-      generalStateModule.setIsRegistered(true)
-      basicStateModule.setSheet(sheet)
-      generalStateModule.setToastMessage('参加しました')
+
+    return AppUtil.FBMng.getGame(this.GAME_ID).then((game: IGame) => {
+      if (game) {
+        if (game.started) {
+          generalStateModule.setToastMessage(
+            '抽選を開始してしまったので、もう参加できません'
+          )
+          return false
+        } else {
+          return AppUtil.FBMng.saveEntry(entry).then(() => {
+            generalStateModule.setIsRegistered(true)
+            basicStateModule.setSheet(sheet)
+            generalStateModule.setToastMessage('参加しました')
+            return true
+          })
+        }
+      }
+      generalStateModule.setToastMessage('想定外エラー')
+      return false
     })
   }
   public static resetSheet() {
     const sheet = BingoLogic.createRandomBingoSheet()
-    AppUtil.FBMng.saveEntrySheet(sheet).then(()=>{
-      basicStateModule.setSheet(sheet)
-    }).then(()=>{
-      BingoLogic.generateSheetCells()
-      generalStateModule.setToastMessage('変えました！')
-    })
-
+    AppUtil.FBMng.saveEntrySheet(sheet)
+      .then(() => {
+        basicStateModule.setSheet(sheet)
+      })
+      .then(() => {
+        BingoLogic.generateSheetCells()
+        generalStateModule.setToastMessage('変えました！')
+      })
   }
 
   private static createRandomBingoSheet(): number[] {

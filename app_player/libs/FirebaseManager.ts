@@ -58,14 +58,14 @@ export default class FirebaseManager {
       },
       signInSuccessUrl: '/',
       signInOptions: [
-        firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         {
           provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
           requireDisplayName: false,
           signInMethod:
             firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
-        }
+        },
+        firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
       ]
     }
     return this.generateAuthUI().start(element, uiConfig)

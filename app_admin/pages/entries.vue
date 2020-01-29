@@ -2,7 +2,50 @@
   <div class="containerWithHeader">
     <page-header title-text="エントリー一覧"></page-header>
     <div class="main">
-      <v-btn @click="loadEntries" class="primary">データリロード</v-btn>
+      <v-row justify="center" align="center">
+        <v-col>
+          <v-btn @click="loadEntries" class="primary">リロード(Entry)</v-btn>
+          <v-btn @click="loadGame" class="primary">リロード(Game)</v-btn>
+        </v-col>
+        <v-col>
+          <v-row no-gutters>
+            <v-col cols="12"
+              ><v-card outlined tile
+                ><div>Total</div>
+                <div>{{ totalCount }}</div></v-card
+              ></v-col
+            >
+          </v-row>
+          <v-row no-gutters>
+            <v-col cols="4"
+              ><v-card outlined tile
+                ><div>通常</div>
+                <div>{{ normalCount }}</div></v-card
+              ></v-col
+            >
+            <v-col cols="4"
+              ><v-card outlined tile
+                ><div>リーチ</div>
+                <div>{{ reachCount }}</div></v-card
+              ></v-col
+            >
+            <v-col cols="4"
+              ><v-card outlined tile
+                ><div>ビンゴ</div>
+                <div>{{ bingoCount }}</div></v-card
+              ></v-col
+            >
+          </v-row>
+          <v-row no-gutters>
+            <v-col cols="12"
+              ><v-card outlined tile
+                ><div>Hits</div>
+                <div>{{ hits }}</div></v-card
+              ></v-col
+            >
+          </v-row>
+        </v-col>
+      </v-row>
       <v-data-table
         :headers="tableHeaders"
         :items="tableItems"
@@ -28,6 +71,11 @@ import { bingoStateModule } from '~/store/modules/bingo'
   }
 })
 export default class EntriesPage extends ABasePage {
+  private totalCount: number = 0
+  private normalCount: number = 0
+  private reachCount: number = 0
+  private bingoCount: number = 0
+
   beforeMount() {
     this.commonBeforeMount()
   }
@@ -68,6 +116,10 @@ export default class EntriesPage extends ABasePage {
 
   private refreshTableItems() {
     console.log('called refreshTableItems3')
+    this.totalCount = 0
+    this.normalCount = 0
+    this.reachCount = 0
+    this.bingoCount = 0
     this.tableItems.splice(0, this.tableItems.length)
     for (const entry of bingoStateModule.entries) {
       const department = MasterDao.department(entry.user.departmentId)
@@ -79,6 +131,15 @@ export default class EntriesPage extends ABasePage {
         }
       }
       const sheetStatus = BingoLogic.getSheetStatus(entry.sheet, this.hits)
+
+      this.totalCount++
+      if (sheetStatus === BingoLogic.SHEET_STATUS_NORMAL) {
+        this.normalCount++
+      } else if (sheetStatus === BingoLogic.SHEET_STATUS_REACH) {
+        this.reachCount++
+      } else if (sheetStatus === BingoLogic.SHEET_STATUS_BINGO) {
+        this.bingoCount++
+      }
       this.tableItems.push({
         name: entry.user.name,
         mail: entry.user.mail,
@@ -94,11 +155,12 @@ export default class EntriesPage extends ABasePage {
     this.refreshTableItems()
   }
 
+  loadGame() {
+    AppUtil.loadGame()
+  }
   loadEntries() {
-    AppUtil.loadGame().then(() => {
-      BingoLogic.loadEntries().then(() => {
-        this.refreshTableItems()
-      })
+    BingoLogic.loadEntries().then(() => {
+      this.refreshTableItems()
     })
   }
 }
