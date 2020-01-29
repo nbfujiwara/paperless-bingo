@@ -2,8 +2,6 @@
   <div class="containerWithHeader">
     <page-header title-text="HOME"></page-header>
     <div class="main">
-
-      <v-btn @click="resetGame" class="primary">ゲームリセット</v-btn>
       <v-btn
         :disabled="currentGame.started"
         @click="closeGameEntry"
@@ -12,9 +10,6 @@
       >
       <v-btn :disabled="!currentGame.started" class="primary" to="/roulette"
         >【投影用】抽選画面</v-btn
-      >
-      <v-btn :disabled="!currentGame.started" class="primary" to="/manual-add"
-        >手動追加</v-btn
       >
       <v-btn class="primary" to="/entries"
         >エントリー一覧</v-btn
@@ -42,6 +37,10 @@
           </v-col>
         </v-row>
       </v-card>
+
+      <v-divider class="my-5"></v-divider>
+      <nuxt-link to="/danger">危険な機能や開発専用機能</nuxt-link>
+
     </div>
   </div>
 </template>
