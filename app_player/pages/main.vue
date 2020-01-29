@@ -20,9 +20,9 @@
         </v-chip>
         <v-chip
           v-show="!cell.center && !cell.opened && cell.hit"
+          @click="openHitCell(rowIdx, colIdx)"
           color="red"
           outlined
-          @click="openHitCell(rowIdx, colIdx)"
         >
           {{ cell.num }}
         </v-chip>
@@ -65,7 +65,7 @@ export default class MainPage extends ABasePage {
     BingoLogic.watchGameChanges()
   }
 
-  private openHitCell(row: number, col: number){
+  private openHitCell(row: number, col: number) {
     BingoLogic.openHitCell(row, col)
   }
 }

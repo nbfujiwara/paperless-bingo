@@ -1,4 +1,5 @@
 import * as firebase from 'firebase/app'
+import * as firebaseui from 'firebaseui'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/storage'
@@ -9,8 +10,10 @@ export default class FirebaseManager {
   private db: firebase.firestore.Firestore
   private authResultCache: firebase.auth.UserCredential | null = null
   private authorized: boolean = false
+  private authUI: firebaseui.auth.AuthUI
 
   public constructor() {
+    console.log('This is FirebaseManager constructor')
     const apiKey = process.env.ENV_FB_API_KEY
     const projectId = process.env.ENV_FB_PROJECT_ID
     const authDomain = projectId + '.firebaseapp.com'
@@ -32,6 +35,49 @@ export default class FirebaseManager {
     }
     this.db = firebase.firestore()
   }
+  public startUI(
+    element: string,
+    successCallback: Function,
+    uiShownCallback: Function | null = null
+  ) {
+    const uiConfig = {
+      callbacks: {
+        signInSuccessWithAuthResult(authResult: any, redirectUrl: any) {
+          if (authResult.user) {
+            successCallback(authResult)
+          } else {
+            console.error('authResult user is empty', authResult)
+          }
+          return false
+        },
+        uiShown() {
+          if (uiShownCallback) {
+            uiShownCallback()
+          }
+        }
+      },
+      signInSuccessUrl: '/',
+      signInOptions: [
+        firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        {
+          provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+          requireDisplayName: false,
+          signInMethod:
+            firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
+        }
+      ]
+    }
+    return this.generateAuthUI().start(element, uiConfig)
+  }
+  private generateAuthUI() {
+    if (this.authUI) {
+      return this.authUI
+    }
+    this.authUI = new firebaseui.auth.AuthUI(firebase.auth())
+    return this.authUI
+  }
+
   public sendMailForAuth(email: string) {
     const actionCodeSettings = {
       url: String(process.env.ENV_BASE_URL),

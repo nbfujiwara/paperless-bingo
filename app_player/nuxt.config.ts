@@ -29,7 +29,7 @@ const nuxtConfig: Configuration = {
   /*
    ** Global CSS
    */
-  css: ['~/assets/common.scss'],
+  css: ['~/assets/common.scss', 'firebaseui/dist/firebaseui.css'],
   /*
    ** Plugins to load before mounting the AppUtil
    */
