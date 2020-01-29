@@ -58,7 +58,7 @@ export default class SignupPage extends Vue {
   name = basicStateModule.user.name
   mail = basicStateModule.user.mail
 
-  departmentEtcText: string
+  departmentEtcText: string = ''
   departmentList = MasterDao.departmentList()
   departmentId: number = 0
   showEtcTextInput: boolean = false
