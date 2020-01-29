@@ -6,8 +6,8 @@
         <v-text-field
           v-model="mail"
           label="メールアドレス"
-          readonly
-          disabled
+          :readonly="!editableMail"
+          :disabled="!editableMail"
         ></v-text-field>
         <v-text-field
           v-model="name"
@@ -56,7 +56,7 @@ import MasterDao from '~/../common/libs/MasterDao'
 @Component({})
 export default class SignupPage extends Vue {
   name = basicStateModule.user.name
-  mail = basicStateModule.user.mail
+  mail = basicStateModule.user.mail ? basicStateModule.user.mail : ''
 
   departmentEtcText: string = ''
   departmentList = MasterDao.departmentList()
@@ -71,6 +71,9 @@ export default class SignupPage extends Vue {
     if (!generalStateModule.isAuthorized) {
       this.$router.push({ path: '/' })
     }
+  }
+  get editableMail(): boolean {
+    return !basicStateModule.user.mail
   }
 
   onChangeDepartment() {

@@ -3,11 +3,21 @@
     <div id="firebase-ui-container"></div>
     <div v-show="showCaption" class="px-2 text-left">
       <v-alert type="info"
-        >社外の方も参加していただきたかったため、一人で複数参加できる仕様になりました。<br />あなたの良心を信じます</v-alert
+        >「Sign in with Google」について
+        <br />会社アカウントを利用する場合、SSOにご注意ください</v-alert
       >
       <v-alert type="info"
-        >「Sign in with
-        Google」で会社アカウントを利用する場合、SSO制約にご注意ください</v-alert
+        >「Sign in with email」について
+        <br />入力したメアドにアクセスURLが記載されたものが届きますが、今のブラウザでURLを開かないとうまくいきません
+        <br />URLをコピペなどしないとダメでちょっと使いづらいです</v-alert
+      >
+      <v-alert type="info"
+        >「Continue as guest」について
+        <br />上記2つが使えない場合用です
+        <br />すぐ利用できますが、画面を閉じたりすると復帰できないかもしれないリスクがあります
+      </v-alert>
+      <v-alert type="info"
+        >一人で複数参加できる仕様です。<br />あなたの良心を信じます</v-alert
       >
     </div>
     <!--

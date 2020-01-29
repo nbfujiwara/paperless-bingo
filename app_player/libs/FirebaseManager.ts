@@ -186,10 +186,8 @@ export default class FirebaseManager {
           entry = this.commonParseDoc(doc.data())
         } else {
           console.log(authUser)
-          if (authUser.email != null) {
+          if (authUser.email !== null) {
             entry.user.mail = authUser.email
-          } else if (this.getLocalEmailForSignIn()) {
-            entry.user.mail = this.getLocalEmailForSignIn()
           }
           if (
             this.authResultCache &&
