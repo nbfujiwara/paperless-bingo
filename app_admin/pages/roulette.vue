@@ -36,7 +36,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import AppUtil from '~/libs/AppUtil'
 import ABasePage from '~/libs/ABasePage'
 import BingoLogic from '~/libs/BingoLogic'
-import { bingoStateModule } from '~/store/modules/bingo'
+import { basicStateModule } from '~/store/modules/basic'
 
 @Component({
   layout: 'plane'
@@ -52,12 +52,12 @@ export default class RoulettePage extends ABasePage {
   private numberList: { num: number; hit: boolean }[] = []
 
   get hitList() {
-    return bingoStateModule.game.hits
+    return basicStateModule.game.hits
   }
   get lastHitNum() {
-    const len = bingoStateModule.game.hits.length
+    const len = basicStateModule.game.hits.length
     if (len) {
-      return bingoStateModule.game.hits[len - 1]
+      return basicStateModule.game.hits[len - 1]
     }
     return null
   }

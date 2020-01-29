@@ -5,7 +5,6 @@ import { IAdminUser } from '~/../common/interfaces/IAdminUser'
 export interface IRootState {
   general: IGeneralState
   basic: IBasicState
-  game: IBingoState
 }
 
 export interface IGeneralState {
@@ -18,8 +17,6 @@ export interface IGeneralState {
 
 export interface IBasicState {
   adminUser: IAdminUser
-}
-export interface IBingoState {
   game: IGame | null
   entries: IEntry[]
 }

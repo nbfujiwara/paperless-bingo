@@ -48,11 +48,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import AppUtil from '~/libs/AppUtil'
-import UtilDate from '~/../common/libs/UtilDate'
 import ABasePage from '~/libs/ABasePage'
 import BingoLogic from '~/libs/BingoLogic'
 import { basicStateModule } from '~/store/modules/basic'
-import { bingoStateModule } from '~/store/modules/bingo'
 
 @Component({
   components: {
@@ -67,7 +65,7 @@ export default class HomePage extends ABasePage {
     AppUtil.loadGame()
   }
   get currentGame() {
-    return bingoStateModule.game
+    return basicStateModule.game
   }
 
   resetGame() {

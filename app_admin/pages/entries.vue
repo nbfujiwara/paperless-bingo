@@ -58,12 +58,11 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import MasterDao from '../../common/libs/MasterDao'
+import MasterDao from '~/../common/libs/MasterDao'
 import AppUtil from '~/libs/AppUtil'
-import UtilDate from '~/../common/libs/UtilDate'
 import ABasePage from '~/libs/ABasePage'
 import BingoLogic from '~/libs/BingoLogic'
-import { bingoStateModule } from '~/store/modules/bingo'
+import { basicStateModule } from '~/store/modules/basic'
 
 @Component({
   components: {
@@ -111,7 +110,7 @@ export default class EntriesPage extends ABasePage {
   private tableItems: { [s: string]: any }[] = []
 
   get hits(): number[] {
-    return bingoStateModule.game.hits
+    return basicStateModule.game.hits
   }
 
   private refreshTableItems() {
@@ -121,7 +120,7 @@ export default class EntriesPage extends ABasePage {
     this.reachCount = 0
     this.bingoCount = 0
     this.tableItems.splice(0, this.tableItems.length)
-    for (const entry of bingoStateModule.entries) {
+    for (const entry of basicStateModule.entries) {
       const department = MasterDao.department(entry.user.departmentId)
       let departmentName = ''
       if (department) {

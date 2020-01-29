@@ -8,7 +8,9 @@
       <nuxt-link to="/">こちらからどうぞ</nuxt-link>
     </div>
     <div v-if="isAuthorizedSuccess && !hasRole">
-      <v-alert class="warning ma-10">認証されたアカウントは権限を持ちません。コンソールから権限付与してください</v-alert>
+      <v-alert class="warning ma-10"
+        >認証されたアカウントは権限を持ちません。コンソールから権限付与してください</v-alert
+      >
     </div>
   </div>
 </template>
