@@ -2,7 +2,6 @@
   <div class="containerWithHeader">
     <page-header title-text="HOME"></page-header>
     <div class="main">
-
       <v-btn @click="resetGame" class="primary">ゲームリセット</v-btn>
       <v-btn class="primary" to="/manual-add">手動追加</v-btn>
     </div>

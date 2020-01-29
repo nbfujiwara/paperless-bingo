@@ -3,6 +3,7 @@
     メイン画面
 
     <v-row v-for="(rowData, rowIdx) in sheetCells" :key="rowIdx">
+      <v-col cols="1"></v-col>
       <v-col
         v-for="(cell, colIdx) in rowData"
         :key="`${rowIdx}_${colIdx}`"
@@ -35,6 +36,11 @@
         </v-chip>
       </v-col>
     </v-row>
+    <template v-if="!gameStarted">
+      <v-divider class="my-5"></v-divider>
+      <v-btn class="primary" @click="resetSheet">BINGOシートを変えたい場合はこちら</v-btn>
+      <p>※開始時間が近くなると変更できなくなります</p>
+    </template>
   </div>
 </template>
 
@@ -53,16 +59,23 @@ export default class MainPage extends ABasePage {
     console.log('before mount')
     this.commonBeforeMount()
   }
-  sheet = basicStateModule.sheet
-
+  get sheet() {
+    return basicStateModule.sheet
+  }
   get sheetCells(): IBingoCell[][] {
     return basicStateModule.sheetCells
+  }
+  get gameStarted(): boolean {
+    return basicStateModule.game.started
   }
   mounted() {
     console.log('mounted2')
     BingoLogic.initializeLocalGameState()
     BingoLogic.generateSheetCells()
     BingoLogic.watchGameChanges()
+  }
+  private resetSheet() {
+    BingoLogic.resetSheet()
   }
 
   private openHitCell(row: number, col: number) {

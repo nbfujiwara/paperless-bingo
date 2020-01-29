@@ -230,6 +230,16 @@ export default class FirebaseManager {
       .doc(authUser.uid)
       .set(entry)
   }
+  public saveEntrySheet(sheet: number[]) {
+    const authUser = this.getCurrentUser()
+    if (!authUser) {
+      throw new Error('auth user is null')
+    }
+    return this.db
+      .collection('entries')
+      .doc(authUser.uid)
+      .set({ sheet }, { merge: true })
+  }
 
   public watchGameHits(gameId: string, callback: Function) {
     return this.db

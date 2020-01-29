@@ -16,6 +16,16 @@ export default class BingoLogic {
       generalStateModule.setToastMessage('参加しました')
     })
   }
+  public static resetSheet() {
+    const sheet = BingoLogic.createRandomBingoSheet()
+    AppUtil.FBMng.saveEntrySheet(sheet).then(()=>{
+      basicStateModule.setSheet(sheet)
+    }).then(()=>{
+      BingoLogic.generateSheetCells()
+      generalStateModule.setToastMessage('変えました！')
+    })
+
+  }
 
   private static createRandomBingoSheet(): number[] {
     const createRandomArray = (
