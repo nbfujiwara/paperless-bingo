@@ -19,7 +19,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import AppUtil from '~/libs/AppUtil'
 import { generalStateModule } from '~/store/modules/general'
 
 @Component({
@@ -27,26 +26,13 @@ import { generalStateModule } from '~/store/modules/general'
 })
 export default class IndexPage extends Vue {
   mounted() {
-    AppUtil.handlingAuth()
-      .then(() => {
-        if (generalStateModule.isRegistered) {
-          console.log('goto main')
-          this.$router.push({ path: '/main' })
-        } else if (generalStateModule.isAuthorizedSuccess) {
-          console.log('signup')
-          this.$router.push({ path: '/signup' })
-        } else {
-          console.log('goto login')
-          this.$router.push({ path: '/login' })
-        }
-      })
-      .catch((e) => {
-        console.log('error発生', e)
-        generalStateModule.setToastMessage(
-          '認証中にエラーが発生しました。もう一度お試しください'
-        )
-        this.$router.push({ path: '/login' })
-      })
+    if (generalStateModule.isRegistered) {
+      this.$router.push({ path: '/main' })
+    } else if (generalStateModule.isAuthorizedSuccess) {
+      this.$router.push({ path: '/signup' })
+    } else {
+      this.$router.push({ path: '/login' })
+    }
   }
 }
 </script>

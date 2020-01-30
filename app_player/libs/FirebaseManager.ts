@@ -9,11 +9,9 @@ import UtilDate from '~/../common/libs/UtilDate'
 export default class FirebaseManager {
   private db: firebase.firestore.Firestore
   private authResultCache: firebase.auth.UserCredential | null = null
-  private authorized: boolean = false
   private authUI: firebaseui.auth.AuthUI
 
   public constructor() {
-    console.log('This is FirebaseManager constructor')
     const apiKey = process.env.ENV_FB_API_KEY
     const projectId = process.env.ENV_FB_PROJECT_ID
     const authDomain = projectId + '.firebaseapp.com'
@@ -44,6 +42,7 @@ export default class FirebaseManager {
       callbacks: {
         signInSuccessWithAuthResult(authResult: any, redirectUrl: any) {
           if (authResult.user) {
+            console.log('auth success. result is', authResult)
             successCallback(authResult)
           } else {
             console.error('authResult user is empty', authResult)
@@ -78,80 +77,6 @@ export default class FirebaseManager {
     return this.authUI
   }
 
-  public sendMailForAuth(email: string) {
-    const actionCodeSettings = {
-      url: String(process.env.ENV_BASE_URL),
-      handleCodeInApp: true
-    }
-    return firebase
-      .auth()
-      .sendSignInLinkToEmail(email, actionCodeSettings)
-      .then(function() {
-        window.localStorage.setItem('emailForSignIn', email)
-      })
-  }
-  private getLocalEmailForSignIn(): string {
-    return String(window.localStorage.getItem('emailForSignIn'))
-  }
-  private isEnableSignInWithEmailLink() {
-    return (
-      firebase.auth().isSignInWithEmailLink(window.location.href) &&
-      this.getLocalEmailForSignIn()
-    )
-  }
-  public signInWithEmailLink() {}
-
-  /**
-   * 認証成功失敗に関わらず既に試みたかどうか
-   */
-  public isAuthorized() {
-    return this.authorized
-  }
-
-  /**
-   * 認証実行
-   */
-  public authorize() {
-    if (this.authorized) {
-      return new Promise((resolve) => {
-        resolve(this.authResultCache)
-      })
-    } else {
-      return Promise.resolve()
-        .then(() => {
-          if (this.isEnableSignInWithEmailLink()) {
-            console.log('authorize by email')
-            const email = this.getLocalEmailForSignIn()
-            return firebase
-              .auth()
-              .signInWithEmailLink(email, window.location.href)
-          } else {
-            console.log('authorize by oauth')
-            return firebase
-              .auth()
-              .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-              .then(() => {
-                return firebase.auth().getRedirectResult()
-              })
-          }
-        })
-        .then((result: firebase.auth.UserCredential) => {
-          console.log('receive authorize result', result)
-          this.authorized = true
-          if (result.user) {
-            this.authResultCache = result
-            return result
-          } else {
-            this.authResultCache = null
-            return null
-          }
-        })
-    }
-  }
-  public loginRedirect() {
-    const provider = new firebase.auth.GoogleAuthProvider()
-    return firebase.auth().signInWithRedirect(provider)
-  }
   public logout() {
     firebase
       .auth()
@@ -189,13 +114,8 @@ export default class FirebaseManager {
           if (authUser.email !== null) {
             entry.user.mail = authUser.email
           }
-          if (
-            this.authResultCache &&
-            this.authResultCache.additionalUserInfo &&
-            this.authResultCache.additionalUserInfo.profile
-          ) {
-            // @ts-ignore
-            entry.user.name = this.authResultCache.additionalUserInfo.profile.name
+          if (authUser.displayName) {
+            entry.user.name = authUser.displayName
           }
         }
       })

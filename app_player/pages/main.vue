@@ -56,7 +56,6 @@ import ABasePage from '~/libs/ABasePage'
 @Component({})
 export default class MainPage extends ABasePage {
   beforeMount() {
-    console.log('before mount')
     this.commonBeforeMount()
   }
   get sheet() {

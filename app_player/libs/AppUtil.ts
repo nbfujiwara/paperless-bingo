@@ -14,36 +14,6 @@ export default class AppUtil {
     return AppUtil._FBMng
   }
 
-  public static handlingAuth() {
-    generalStateModule.setIsAuthorized(true)
-    return Promise.resolve()
-    /*
-    return AppUtil.FBMng.authorize().then((authResult) => {
-      console.log(authResult)
-      if (authResult) {
-        generalStateModule.setIsAuthorizedSuccess(true)
-        return AppUtil.FBMng.getLogonData().then((entryData) => {
-          console.log('logonData is ', entryData)
-          if (entryData) {
-            if (entryData.user) {
-              console.log('logonData has user data ', entryData.user)
-              basicStateModule.setUser(entryData.user)
-            }
-            if (entryData.sheet.length > 0) {
-              console.log('logonData has sheet data ', entryData.sheet)
-              basicStateModule.setSheet(entryData.sheet)
-              generalStateModule.setIsRegistered(true)
-            } else {
-              generalStateModule.setIsRegistered(false)
-            }
-          }
-        })
-      }
-    })
-
-     */
-  }
-
   public static startAuthUI(
     element: string,
     successCallback: Function,
@@ -75,11 +45,5 @@ export default class AppUtil {
       },
       uiShownCallback
     )
-  }
-
-  public static sendMailForAuth(email: string) {
-    return AppUtil.FBMng.sendMailForAuth(email).then(() => {
-      generalStateModule.setToastMessage('認証用リンクをメール送信しました')
-    })
   }
 }

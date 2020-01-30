@@ -38,7 +38,9 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn @click="executeRegister()" class="primary" x-large>登録</v-btn>
+        <v-btn @click="executeRegister()" class="primary" x-large block
+          >エントリーする</v-btn
+        >
       </v-card-actions>
     </v-card>
   </div>
@@ -49,7 +51,6 @@ import { Component, Vue } from 'vue-property-decorator'
 import { IUser } from '../../common/interfaces/IUser'
 import { generalStateModule } from '~/store/modules/general'
 import { basicStateModule } from '~/store/modules/basic'
-import AppUtil from '~/libs/AppUtil'
 import BingoLogic from '~/libs/BingoLogic'
 import MasterDao from '~/../common/libs/MasterDao'
 
