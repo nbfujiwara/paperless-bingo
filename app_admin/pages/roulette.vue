@@ -61,10 +61,7 @@ export default class RoulettePage extends ABasePage {
     }
     return null
   }
-  @Watch('hitList')
-  onChangeHitList(newVal: number[], oldVal: number[]) {
-    // this.drawGraphData()
-  }
+
   beforeMount() {
     this.commonBeforeMount()
   }

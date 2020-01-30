@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import ABasePage from '~/libs/ABasePage'
 import BingoLogic from '~/libs/BingoLogic'
 

@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import MasterDao from '~/../common/libs/MasterDao'
 import AppUtil from '~/libs/AppUtil'
 import ABasePage from '~/libs/ABasePage'
@@ -113,6 +113,11 @@ export default class EntriesPage extends ABasePage {
     return basicStateModule.game.hits
   }
 
+  @Watch('hits')
+  onChangeHitList(newVal: number[], oldVal: number[]) {
+    this.refreshTableItems()
+  }
+
   private refreshTableItems() {
     console.log('called refreshTableItems3')
     this.totalCount = 0
@@ -147,11 +152,6 @@ export default class EntriesPage extends ABasePage {
         status: sheetStatus + ':' + BingoLogic.getSheetStatusName(sheetStatus)
       })
     }
-  }
-
-  @Watch('hits')
-  onChangeHitList(newVal: number[], oldVal: number[]) {
-    this.refreshTableItems()
   }
 
   loadGame() {

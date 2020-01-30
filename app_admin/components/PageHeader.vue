@@ -12,8 +12,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { basicStateModule } from '~/store/modules/basic'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component({})
 export default class PageHeader extends Vue {
@@ -24,11 +23,3 @@ export default class PageHeader extends Vue {
   public titleText: string
 }
 </script>
-
-<style scoped lang="scss">
-@import '~assets/variables';
-
-hr {
-  border: 1px solid #fff;
-}
-</style>

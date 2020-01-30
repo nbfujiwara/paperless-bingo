@@ -16,14 +16,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import AppUtil from '../libs/AppUtil'
+import ABasePage from '~/libs/ABasePage'
 import { generalStateModule } from '~/store/modules/general'
 
 @Component({
   layout: 'plane'
 })
-export default class LoginPage extends Vue {
+export default class LoginPage extends ABasePage {
   isAuthorizedSuccess = generalStateModule.isAuthorizedSuccess
   hasRole = generalStateModule.hasRole
 

@@ -11,9 +11,7 @@
       <v-btn :disabled="!currentGame.started" class="primary" to="/roulette"
         >【投影用】抽選画面</v-btn
       >
-      <v-btn class="primary" to="/entries"
-        >エントリー一覧</v-btn
-      >
+      <v-btn class="primary" to="/entries">エントリー一覧</v-btn>
 
       <v-divider class="my-5"></v-divider>
       <v-card class="mx-10">
@@ -40,13 +38,12 @@
 
       <v-divider class="my-5"></v-divider>
       <nuxt-link to="/danger">危険な機能や開発専用機能</nuxt-link>
-
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import AppUtil from '~/libs/AppUtil'
 import ABasePage from '~/libs/ABasePage'
 import BingoLogic from '~/libs/BingoLogic'
