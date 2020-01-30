@@ -155,7 +155,7 @@ export default class EntriesPage extends ABasePage {
   }
 
   loadGame() {
-    AppUtil.loadGame()
+    BingoLogic.loadGame()
   }
   loadEntries() {
     BingoLogic.loadEntries().then(() => {

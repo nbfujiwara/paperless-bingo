@@ -11,19 +11,33 @@ export default class BingoLogic {
   public static SHEET_STATUS_UNKNOWN: number = 0
   private static lineList: { row: number; col: number; idx: number }[][] = []
 
+  public static loadGame() {
+    return AppUtil.FBMng.getGame(this.GAME_ID).then((game) => {
+      if (game) {
+        console.log(game)
+        basicStateModule.setGame(game)
+      } else {
+        return AppUtil.FBMng.saveGame(this.GAME_ID, basicStateModule.game).then(
+          () => {
+            generalStateModule.setToastMessage('初期化ゲーム情報を保存しました')
+          }
+        )
+      }
+    })
+  }
   public static resetGame() {
     const game = { hits: [], started: false }
     basicStateModule.setGame(game)
-    AppUtil.FBMng.saveGame(BingoLogic.GAME_ID, game).then(() => {
+    AppUtil.FBMng.saveGame(this.GAME_ID, game).then(() => {
       generalStateModule.setToastMessage('ゲームをリセットしました')
     })
   }
   public static startGame() {
     const game = basicStateModule.game
     game.started = true
-    AppUtil.FBMng.saveGame(BingoLogic.GAME_ID, game)
+    AppUtil.FBMng.saveGame(this.GAME_ID, game)
       .then(() => {
-        return AppUtil.loadGame()
+        return this.loadGame()
       })
       .then(() => {
         generalStateModule.setToastMessage('エントリーを締め切りました')
@@ -32,7 +46,7 @@ export default class BingoLogic {
 
   public static drawNumber(num: number) {
     basicStateModule.pushHit(num)
-    return AppUtil.FBMng.savePushGameHit(BingoLogic.GAME_ID, num).then(() => {
+    return AppUtil.FBMng.savePushGameHit(this.GAME_ID, num).then(() => {
       generalStateModule.setToastMessage(num + 'を追加しました')
     })
   }
@@ -46,11 +60,9 @@ export default class BingoLogic {
     const randIdx = Math.floor(Math.random() * remainList.length)
     const hitNum = remainList[randIdx]
     basicStateModule.pushHit(hitNum)
-    return AppUtil.FBMng.savePushGameHit(BingoLogic.GAME_ID, hitNum).then(
-      () => {
-        return hitNum
-      }
-    )
+    return AppUtil.FBMng.savePushGameHit(this.GAME_ID, hitNum).then(() => {
+      return hitNum
+    })
   }
 
   public static loadEntries() {
@@ -66,9 +78,9 @@ export default class BingoLogic {
    * BINGOに判定するラインを定義
    */
   private static getLineList(): { row: number; col: number; idx: number }[][] {
-    if (BingoLogic.lineList.length) {
+    if (this.lineList.length) {
       // 不変なので何度も算出する必要なし
-      return BingoLogic.lineList
+      return this.lineList
     }
     const cellObj = (
       row: number,
@@ -94,16 +106,16 @@ export default class BingoLogic {
       lines[10].push(cellObj(i, i))
       lines[11].push(cellObj(i, 4 - i))
     }
-    BingoLogic.lineList = lines
+    this.lineList = lines
     return lines
   }
 
   public static getSheetStatus(sheet: number[], hits: number[]) {
     if (sheet.length !== 25) {
-      return BingoLogic.SHEET_STATUS_UNKNOWN
+      return this.SHEET_STATUS_UNKNOWN
     }
-    let status = BingoLogic.SHEET_STATUS_NORMAL
-    const lines = BingoLogic.getLineList()
+    let status = this.SHEET_STATUS_NORMAL
+    const lines = this.getLineList()
     for (const line of lines) {
       let counter: number = 0
       for (const cell of line) {
@@ -117,20 +129,20 @@ export default class BingoLogic {
         }
       }
       if (counter === 5) {
-        return BingoLogic.SHEET_STATUS_BINGO
+        return this.SHEET_STATUS_BINGO
       } else if (counter === 4) {
-        status = BingoLogic.SHEET_STATUS_REACH
+        status = this.SHEET_STATUS_REACH
       }
     }
     return status
   }
   public static getSheetStatusName(sheetStatus: number): string {
     switch (sheetStatus) {
-      case BingoLogic.SHEET_STATUS_BINGO:
+      case this.SHEET_STATUS_BINGO:
         return 'ビンゴ'
-      case BingoLogic.SHEET_STATUS_REACH:
+      case this.SHEET_STATUS_REACH:
         return 'リーチ'
-      case BingoLogic.SHEET_STATUS_NORMAL:
+      case this.SHEET_STATUS_NORMAL:
         return '通常'
     }
     return '不明'

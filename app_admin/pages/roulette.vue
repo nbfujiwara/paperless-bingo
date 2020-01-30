@@ -67,7 +67,7 @@ export default class RoulettePage extends ABasePage {
   }
 
   mounted() {
-    AppUtil.loadGame().then(() => {
+    BingoLogic.loadGame().then(() => {
       for (let num = 1; num <= 75; num++) {
         this.numberList.push({ num, hit: this.hitList.includes(num) })
       }

@@ -59,7 +59,7 @@ export default class HomePage extends ABasePage {
     this.commonBeforeMount()
   }
   mounted() {
-    AppUtil.loadGame()
+    BingoLogic.loadGame()
   }
   get currentGame() {
     return basicStateModule.game

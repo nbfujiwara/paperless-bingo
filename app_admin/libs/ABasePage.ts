@@ -1,6 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { generalStateModule } from '~/store/modules/general'
 import AppUtil from '~/libs/AppUtil'
+import BingoLogic from '~/libs/BingoLogic'
 
 export default class ABasePage extends Vue {
   protected commonBeforeMount() {
@@ -16,7 +17,7 @@ export default class ABasePage extends Vue {
         })
         .then((hasRole) => {
           if (hasRole) {
-            return AppUtil.loadGame()
+            return BingoLogic.loadGame()
           }
         })
     } else if (!generalStateModule.hasRole) {
