@@ -17,16 +17,23 @@ export default class AppUtil {
     return AppUtil.FBMng.authorize().then((authResult) => {
       if (authResult) {
         generalStateModule.setIsAuthorizedSuccess(true)
-        return AppUtil.FBMng.getLogonData().then((logonData) => {
-          if (logonData) {
-            if (logonData.adminUser) {
-              basicStateModule.setAdminUser(logonData.adminUser)
+        return AppUtil.FBMng.getLogonData()
+          .then((logonData) => {
+            if (logonData) {
+              if (logonData.adminUser) {
+                basicStateModule.setAdminUser(logonData.adminUser)
+              }
+              if (logonData.role && logonData.role > 0) {
+                generalStateModule.setHasRole(true)
+              }
             }
-            if (logonData.role && logonData.role > 0) {
-              generalStateModule.setHasRole(true)
-            }
-          }
-        })
+          })
+          .catch((error) => {
+            generalStateModule.setToastMessage(
+              '初期データ取得中にエラーが発生しました'
+            )
+            console.error(error)
+          })
       }
     })
   }

@@ -138,9 +138,6 @@ export default class FirebaseManager {
           return { adminUser: logonUser, role }
         }
       )
-      .catch((error) => {
-        console.log(error)
-      })
   }
 
   public getGame(gameId: string) {

@@ -119,7 +119,6 @@ export default class EntriesPage extends ABasePage {
   }
 
   private refreshTableItems() {
-    console.log('called refreshTableItems3')
     this.totalCount = 0
     this.normalCount = 0
     this.reachCount = 0

@@ -14,7 +14,6 @@ export default class BingoLogic {
   public static loadGame() {
     return AppUtil.FBMng.getGame(this.GAME_ID).then((game) => {
       if (game) {
-        console.log(game)
         basicStateModule.setGame(game)
       } else {
         return AppUtil.FBMng.saveGame(this.GAME_ID, basicStateModule.game).then(

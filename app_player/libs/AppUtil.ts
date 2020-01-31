@@ -23,20 +23,27 @@ export default class AppUtil {
         // firebaseUIにしたらauthorizeとauthorizedSuccessが同タイミングになってしまった
         generalStateModule.setIsAuthorized(true)
         generalStateModule.setIsAuthorizedSuccess(true)
-        AppUtil.FBMng.getLogonData().then((entryData) => {
-          if (entryData) {
-            if (entryData.user) {
-              basicStateModule.setUser(entryData.user)
+        AppUtil.FBMng.getLogonData()
+          .then((entryData) => {
+            if (entryData) {
+              if (entryData.user) {
+                basicStateModule.setUser(entryData.user)
+              }
+              if (entryData.sheet.length > 0) {
+                basicStateModule.setSheet(entryData.sheet)
+                generalStateModule.setIsRegistered(true)
+              } else {
+                generalStateModule.setIsRegistered(false)
+              }
+              successCallback()
             }
-            if (entryData.sheet.length > 0) {
-              basicStateModule.setSheet(entryData.sheet)
-              generalStateModule.setIsRegistered(true)
-            } else {
-              generalStateModule.setIsRegistered(false)
-            }
-            successCallback()
-          }
-        })
+          })
+          .catch((error) => {
+            generalStateModule.setToastMessage(
+              '初期データロード中にエラーが発生しました'
+            )
+            console.error(error)
+          })
       },
       uiShownCallback
     )

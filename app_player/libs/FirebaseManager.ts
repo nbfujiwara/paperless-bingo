@@ -120,9 +120,6 @@ export default class FirebaseManager {
       .then(() => {
         return entry
       })
-      .catch((error) => {
-        console.log(error)
-      })
   }
 
   public getGame(gameId: string) {
