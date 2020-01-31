@@ -38,7 +38,9 @@
     </v-row>
     <template v-if="!gameStarted">
       <v-divider class="my-5"></v-divider>
-      <v-btn class="primary" @click="resetSheet">BINGOシートを変えたい場合はこちら</v-btn>
+      <v-btn @click="resetSheet" class="primary"
+        >BINGOシートを変えたい場合はこちら</v-btn
+      >
       <p>※開始時間が近くなると変更できなくなります</p>
     </template>
   </div>
@@ -68,7 +70,6 @@ export default class MainPage extends ABasePage {
     return basicStateModule.game.started
   }
   mounted() {
-    console.log('mounted2')
     BingoLogic.initializeLocalGameState()
     BingoLogic.generateSheetCells()
     BingoLogic.watchGameChanges()

@@ -1,8 +1,6 @@
-import UtilDate from '../../common/libs/UtilDate'
 import FirebaseManager from './FirebaseManager'
 import { basicStateModule } from '~/store/modules/basic'
 import { generalStateModule } from '~/store/modules/general'
-import BingoLogic from '~/libs/BingoLogic'
 
 export default class AppUtil {
   private static _FBMng: FirebaseManager
@@ -26,14 +24,11 @@ export default class AppUtil {
         generalStateModule.setIsAuthorized(true)
         generalStateModule.setIsAuthorizedSuccess(true)
         AppUtil.FBMng.getLogonData().then((entryData) => {
-          console.log('logonData is ', entryData)
           if (entryData) {
             if (entryData.user) {
-              console.log('logonData has user data ', entryData.user)
               basicStateModule.setUser(entryData.user)
             }
             if (entryData.sheet.length > 0) {
-              console.log('logonData has sheet data ', entryData.sheet)
               basicStateModule.setSheet(entryData.sheet)
               generalStateModule.setIsRegistered(true)
             } else {

@@ -42,7 +42,6 @@ export default class FirebaseManager {
       callbacks: {
         signInSuccessWithAuthResult(authResult: any, redirectUrl: any) {
           if (authResult.user) {
-            console.log('auth success. result is', authResult)
             successCallback(authResult)
           } else {
             console.error('authResult user is empty', authResult)
@@ -110,7 +109,6 @@ export default class FirebaseManager {
         if (doc.exists) {
           entry = this.commonParseDoc(doc.data())
         } else {
-          console.log(authUser)
           if (authUser.email !== null) {
             entry.user.mail = authUser.email
           }

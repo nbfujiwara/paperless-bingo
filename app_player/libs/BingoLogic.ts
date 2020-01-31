@@ -116,9 +116,7 @@ export default class BingoLogic {
         sheetCells[row][col] = cell
       }
     }
-    console.log('set sheet cells')
     basicStateModule.setSheetCells(sheetCells)
-    console.log(basicStateModule.sheetCells)
   }
 
   public static initializeLocalGameState() {
