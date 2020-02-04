@@ -49,10 +49,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { IBingoCell } from '~/../common/interfaces/IBingoCell'
-import { generalStateModule } from '~/store/modules/general'
 import { basicStateModule } from '~/store/modules/basic'
-import AppUtil from '~/libs/AppUtil'
-import BingoLogic from '~/libs/BingoLogic'
+import GameUtil from '~/libs/GameUtil'
 import ABasePage from '~/libs/ABasePage'
 
 @Component({})
@@ -70,16 +68,15 @@ export default class MainPage extends ABasePage {
     return basicStateModule.game.started
   }
   mounted() {
-    BingoLogic.initializeLocalGameState()
-    BingoLogic.generateSheetCells()
-    BingoLogic.watchGameChanges()
+    GameUtil.initializeLocalGameState()
+    GameUtil.watchGameChanges()
   }
   private resetSheet() {
-    BingoLogic.resetSheet()
+    GameUtil.resetSheet()
   }
 
   private openHitCell(row: number, col: number) {
-    BingoLogic.openHitCell(row, col)
+    GameUtil.openHitCell(row, col)
   }
 }
 </script>

@@ -10,6 +10,7 @@ import store from '~/store/store'
 import { IBasicState } from '~/store/types'
 import { IUser } from '~/../common/interfaces/IUser'
 import { IBingoCell } from '~/../common/interfaces/IBingoCell'
+import BingoLogic from "~/libs/BingoLogic"
 
 @Module({ dynamic: true, store, name: 'basic', namespaced: true })
 class Basic extends VuexModule implements IBasicState {
@@ -46,6 +47,7 @@ class Basic extends VuexModule implements IBasicState {
   @Action({})
   public setSheet(val: number[]) {
     this.SET_SHEET(val)
+    this.SET_SHEET_CELLS(BingoLogic.sheetArrayToSheetCellsData(val))
   }
   @Action({})
   public setSheetCells(val: IBingoCell[][]) {

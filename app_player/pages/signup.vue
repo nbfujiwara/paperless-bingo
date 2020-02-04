@@ -51,7 +51,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { IUser } from '../../common/interfaces/IUser'
 import { generalStateModule } from '~/store/modules/general'
 import { basicStateModule } from '~/store/modules/basic'
-import BingoLogic from '~/libs/BingoLogic'
+import GameUtil from '~/libs/GameUtil'
 import MasterDao from '~/../common/libs/MasterDao'
 
 @Component({})
@@ -79,11 +79,7 @@ export default class SignupPage extends Vue {
 
   onChangeDepartment() {
     const dep = MasterDao.department(this.departmentId)
-    if (dep && dep.withText) {
-      this.showEtcTextInput = true
-    } else {
-      this.showEtcTextInput = false
-    }
+    this.showEtcTextInput = !!(dep && dep.withText)
   }
 
   validateRegister() {
@@ -122,7 +118,7 @@ export default class SignupPage extends Vue {
 
     const warning = this.validateRegister()
     if (!warning) {
-      BingoLogic.entry(user).then((success: boolean) => {
+      GameUtil.entry(user).then((success: boolean) => {
         if (success) {
           this.$router.push({ path: '/main' })
         }

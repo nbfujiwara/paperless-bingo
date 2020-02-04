@@ -1,49 +1,14 @@
 import { IBingoCell } from '../../common/interfaces/IBingoCell'
-import { IUser } from '~/../common/interfaces/IUser'
-import { basicStateModule } from '~/store/modules/basic'
-import { generalStateModule } from '~/store/modules/general'
-import AppUtil from '~/libs/AppUtil'
 import { IGame } from '~/../common/interfaces/IGame'
 
 export default class BingoLogic {
   static GAME_ID: string = '1'
-  public static entry(user: IUser) {
-    const sheet = BingoLogic.createRandomBingoSheet()
-    const entry = { user, sheet }
+  public static SHEET_STATUS_BINGO: number = 3
+  public static SHEET_STATUS_REACH: number = 2
+  public static SHEET_STATUS_NORMAL: number = 1
+  public static SHEET_STATUS_UNKNOWN: number = 0
 
-    return AppUtil.FBMng.getGame(this.GAME_ID).then((game: IGame) => {
-      if (game) {
-        if (game.started) {
-          generalStateModule.setToastMessage(
-            '抽選を開始してしまったので、もう参加できません'
-          )
-          return false
-        } else {
-          return AppUtil.FBMng.saveEntry(entry).then(() => {
-            generalStateModule.setIsRegistered(true)
-            basicStateModule.setSheet(sheet)
-            generalStateModule.setToastMessage('参加しました')
-            return true
-          })
-        }
-      }
-      generalStateModule.setToastMessage('想定外エラー')
-      return false
-    })
-  }
-  public static resetSheet() {
-    const sheet = BingoLogic.createRandomBingoSheet()
-    AppUtil.FBMng.saveEntrySheet(sheet)
-      .then(() => {
-        basicStateModule.setSheet(sheet)
-      })
-      .then(() => {
-        BingoLogic.generateSheetCells()
-        generalStateModule.setToastMessage('変えました！')
-      })
-  }
-
-  private static createRandomBingoSheet(): number[] {
+  public static createRandomBingoSheet(): number[] {
     const createRandomArray = (
       min: number,
       max: number,
@@ -77,23 +42,7 @@ export default class BingoLogic {
       .concat(listG)
       .concat(listO)
   }
-  public static convertSheet2D(array: number[]): number[][] {
-    if (array.length !== 25) {
-      console.error('incorrect bingo array', array)
-      throw new Error('Bingo想定外データが入ってきました')
-    }
-    const sheet2D: number[][] = []
-    for (let row = 0; row < 5; row++) {
-      sheet2D[row] = []
-      for (let col = 0; col < 5; col++) {
-        sheet2D[row][col] = array[row + col * 5]
-      }
-    }
-    return sheet2D
-  }
-
-  public static generateSheetCells() {
-    const numArray = basicStateModule.sheet
+  public static sheetArrayToSheetCellsData(numArray: number[]): IBingoCell[][] {
     if (numArray.length !== 25) {
       console.error('incorrect bingo array', numArray)
       throw new Error('Bingo想定外データになっています')
@@ -116,63 +65,14 @@ export default class BingoLogic {
         sheetCells[row][col] = cell
       }
     }
-    basicStateModule.setSheetCells(sheetCells)
+    return sheetCells
   }
 
-  public static initializeLocalGameState() {
-    basicStateModule.setGame({ hits: [], started: false })
-  }
-  public static watchGameChanges() {
-    const listener = AppUtil.FBMng.watchGameHits(
-      BingoLogic.GAME_ID,
-      (newGame: IGame) => {
-        const newHits = newGame.hits
-        const orgHits = basicStateModule.game.hits
-
-        if (newHits.length && newHits.length !== orgHits.length) {
-          const hitNum = newHits[newHits.length - 1]
-          if (basicStateModule.sheet.includes(hitNum)) {
-            generalStateModule.setToastMessage(
-              '抽選番号『' + hitNum + '』ヤッタ！番号をタップして'
-            )
-          } else {
-            generalStateModule.setToastMessage(
-              '抽選番号『' + hitNum + '』　残念ハズレ。。。'
-            )
-          }
-
-          for (let i = orgHits.length; i < newHits.length; i++) {
-            BingoLogic.handlingAddedHitNum(newHits[i])
-          }
-        }
-        basicStateModule.setGame(newGame)
-      }
-    )
-  }
-
-  private static handlingAddedHitNum(hitNum: number) {
-    for (let row = 0; row < 5; row++) {
-      for (let col = 0; col < 5; col++) {
-        if (basicStateModule.sheetCells[row][col].num === hitNum) {
-          basicStateModule.putSheetCellHit({ row, col })
-          return true
-        }
-      }
-    }
-    return false
-  }
-
-  public static openHitCell(row: number, col: number) {
-    const cell = basicStateModule.sheetCells[row][col]
-    if (cell.hit) {
-      basicStateModule.putSheetCellOpened({ row, col })
-      BingoLogic.checkBingoLine(row, col)
-    }
-  }
-  private static checkBingoLine(targetRow: number, targetCol: number) {
-    const isReach: boolean = false
-    const isBingo: boolean = false
-
+  public static getSheetBingoStatus(
+    targetRow: number,
+    targetCol: number,
+    sheetCells: IBingoCell[][]
+  ) {
     const colLine: { row: number; col: number }[] = []
     const rowLine: { row: number; col: number }[] = []
     const diagonalLine: { row: number; col: number }[] = []
@@ -196,7 +96,7 @@ export default class BingoLogic {
     const getOpenedCount = (line: { row: number; col: number }[]): number => {
       let cnt: number = 0
       for (const pos of line) {
-        if (basicStateModule.sheetCells[pos.row][pos.col].opened) {
+        if (sheetCells[pos.row][pos.col].opened) {
           cnt++
         }
       }
@@ -223,9 +123,10 @@ export default class BingoLogic {
         : maxOpenedCount
 
     if (maxOpenedCount === 4) {
-      generalStateModule.setToastMessage('!!!!!BINGO!!!!!')
+      return this.SHEET_STATUS_BINGO
     } else if (maxOpenedCount === 3) {
-      generalStateModule.setToastMessage('リーチ!')
+      return this.SHEET_STATUS_REACH
     }
+    return this.SHEET_STATUS_NORMAL
   }
 }
